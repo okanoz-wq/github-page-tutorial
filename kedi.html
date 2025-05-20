@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Süper Gerçekçi Kedi</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+            cursor: default;
+        }
+
+        #cat-container {
+            position: absolute;
+            width: 350px;
+            height: 280px;
+            cursor: pointer;
+            z-index: 10;
+            transform-origin: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* Kedi duruş state'leri */
+        #cat-container.walk {
+            animation: walkCycle 0.8s infinite steps(4);
+        }
+
+        #cat-container.sit {
+            transform: translateY(30px) scale(0.9);
+        }
+
+        #cat-container.sleep {
+            animation: sleepBreath 3s infinite ease-in-out;
+        }
+
+        #cat-container.wave {
+            animation: wave 0.8s ease-in-out;
+        }
+
+        @keyframes walkCycle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(3deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(-3deg); }
+        }
+
+        @keyframes sleepBreath {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes wave {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(15deg) scale(1.1); }
+            50% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        /* Konuşma balonu */
+        .speech-bubble {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            font-size: 18px;
+            min-width: 220px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.4s, transform 0.4s;
+            z-index: 5;
+            transform-origin: bottom center;
+        }
+
+        .speech-bubble.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-5px);
+        }
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            margin-left: -15px;
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: white transparent;
+        }
+
+        /* Kontrol paneli */
+        #controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            display: flex;
+            gap: 15px;
+            background-color: rgba(255,255,255,0.9);
+            padding: 15px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #6D4C41;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+        button:hover {
+            background-color: #5D4037;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button.active {
+            background-color: #4E342E;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Gerçekçi kedi çizimi - Daha detaylı versiyon */
+        .cat {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+        }
+
+        .cat-body {
+            position: absolute;
+            width: 220px;
+            height: 140px;
+            background: linear-gradient(135deg, #9E9E9E, #616161);
+            border-radius: 110px 110px 90px 90px;
+            top: 100px;
+            left: 65px;
+            box-shadow: 
+                inset -15px -15px 30px rgba(0,0,0,0.2),
+                0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .cat-head {
+            position: absolute;
+            top: 40px;
+            left: 90px;
+            width: 160px;
+            height: 130px;
+            background: linear-gradient(135deg, #9E9E9E, #616161);
+            border-radius: 80px 80px 70px 70px;
+            box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+
+        /* Kulaklar */
+        .ear {
+            position: absolute;
+            width: 50px;
+            height: 60px;
+            background: linear-gradient(to bottom, #616161, #424242);
+            z-index: 1;
+            border-radius: 25px 25px 0 0;
+            box-shadow: inset -8px -8px 15px rgba(0,0,0,0.3);
+        }
+
+        .ear.left {
+            top: -15px;
+            left: 15px;
+            transform: rotate(-25deg);
+        }
+
+        .ear.right {
+            top: -15px;
+            right: 15px;
+            transform: rotate(25deg);
+        }
+
+        .ear-inner {
+            position: absolute;
+            width: 25px;
+            height: 35px;
+            background: #E0E0E0;
+            border-radius: 12px 12px 0 0;
+            bottom: 8px;
+            left: 12px;
+        }
+
+        /* Gözler - Animasyonlu */
+        .eye {
+            position: absolute;
+            width: 30px;
+            height: 45px;
+            background-color: #212121;
+            border-radius: 50%;
+            top: 45px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .eye.left {
+            left: 35px;
+            transform: rotate(-5deg);
+        }
+
+        .eye.right {
+            right: 35px;
+            transform: rotate(5deg);
+        }
+
+        .eye.blink {
+            height: 5px;
+            top: 65px;
+        }
+
+        .eye-shine {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            top: 8px;
+            left: 8px;
+            animation: eyeShine 5s infinite;
+        }
+
+        @keyframes eyeShine {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Burun ve ağız */
+        .nose {
+            position: absolute;
+            width: 18px;
+            height: 12px;
+            background-color: #F48FB1;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            top: 85px;
+            left: 71px;
+            z-index: 3;
+        }
+
+        .mouth {
+            position: absolute;
+            width: 40px;
+            height: 20px;
+            top: 95px;
+            left: 60px;
+            z-index: 2;
+        }
+
+        .mouth-line {
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background-color: #212121;
+            top: 0;
+        }
+
+        .mouth-curve {
+            position: absolute;
+            width: 20px;
+            height: 10px;
+            border-bottom: 2px solid #212121;
+            border-radius: 0 0 50% 50%;
+            top: 0;
+        }
+
+        .mouth-curve.left {
+            left: 0;
+        }
+
+        .mouth-curve.right {
+            right: 0;
+        }
+
+        /* Bıyıklar */
+        .whiskers {
+            position: absolute;
+            width: 140px;
+            height: 25px;
+            top: 90px;
+            left: 10px;
+        }
+
+        .whisker {
+            position: absolute;
+            height: 1.5px;
+            background-color: #212121;
+            box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        }
+
+        .whisker.left1 { width: 50px; transform: rotate(-20deg); top: 0; left: 0; }
+        .whisker.left2 { width: 55px; top: 6px; left: 0; }
+        .whisker.left3 { width: 50px; transform: rotate(20deg); top: 12px; left: 0; }
+        .whisker.right1 { width: 50px; transform: rotate(20deg); top: 0; right: 0; }
+        .whisker.right2 { width: 55px; top: 6px; right: 0; }
+        .whisker.right3 { width: 50px; transform: rotate(-20deg); top: 12px; right: 0; }
+
+        /* Kuyruk - Daha akıcı animasyon */
+        .tail {
+            position: absolute;
+            width: 150px;
+            height: 25px;
+            background: linear-gradient(to right, #616161, #9E9E9E);
+            border-radius: 0 12px 12px 0;
+            right: -130px;
+            top: 70px;
+            z-index: -1;
+            transform-origin: left center;
+            animation: tailMove 4s infinite ease-in-out;
+        }
+
+        @keyframes tailMove {
+            0%, 100% { transform: rotate(-15deg); }
+            25% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+            75% { transform: rotate(0deg); }
+        }
+
+        /* Bacaklar - Daha gerçekçi animasyon */
+        .leg {
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            background: linear-gradient(to bottom, #616161, #424242);
+            border-radius: 15px;
+            bottom: -25px;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.2);
+        }
+
+        .leg.front-left { left: 35px; animation: legMoveFront 1.6s infinite; }
+        .leg.front-right { left: 95px; animation: legMoveFront 1.6s infinite reverse; }
+        .leg.back-left { left: 60px; animation: legMoveBack 1.6s infinite; }
+        .leg.back-right { left: 120px; animation: legMoveBack 1.6s infinite reverse; }
+
+        @keyframes legMoveFront {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-5px) rotate(5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(8deg); }
+        }
+
+        @keyframes legMoveBack {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-3px) rotate(-3deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(-6deg); }
+        }
+
+        /* Tüy dokusu - Daha fazla detay */
+        .fur {
+            position: absolute;
+            background-color: #9E9E9E;
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        .fur-1 { width: 20px; height: 25px; top: 60px; left: 40px; transform: rotate(30deg); }
+        .fur-2 { width: 25px; height: 20px; top: 70px; right: 50px; }
+        .fur-3 { width: 15px; height: 22px; bottom: 40px; left: 85px; transform: rotate(-20deg); }
+        .fur-4 { width: 22px; height: 15px; bottom: 50px; right: 40px; }
+        .fur-5 { width: 18px; height: 12px; top: 30px; left: 100px; }
+        .fur-6 { width: 12px; height: 18px; top: 120px; right: 30px; }
+
+        /* Oturma pozisyonu için özel stil */
+        #cat-container.sit .cat-body {
+            height: 120px;
+            top: 110px;
+        }
+
+        #cat-container.sit .leg.front-left,
+        #cat-container.sit .leg.front-right {
+            height: 40px;
+            bottom: -20px;
+        }
+
+        #cat-container.sit .leg.back-left,
+        #cat-container.sit .leg.back-right {
+            display: none;
+        }
+
+        #cat-container.sit .tail {
+            animation: tailSit 3s infinite ease-in-out;
+            transform: rotate(-30deg);
+        }
+
+        @keyframes tailSit {
+            0%, 100% { transform: rotate(-30deg); }
+            50% { transform: rotate(-20deg); }
+        }
+
+        /* Uyku pozisyonu */
+        #cat-container.sleep {
+            transform: rotate(-90deg) translateY(50px);
+        }
+
+        #cat-container.sleep .cat-body {
+            width: 250px;
+            height: 120px;
+            top: 120px;
+            left: 50px;
+        }
+
+        #cat-container.sleep .cat-head {
+            top: 80px;
+            left: 30px;
+        }
+
+        #cat-container.sleep .leg,
+        #cat-container.sleep .tail {
+            display: none;
+        }
+
+        #cat-container.sleep .eye {
+            transform: rotate(0deg);
+            height: 3px;
+            top: 60px;
+        }
+
+        /* Zemin efekti */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, #8BC34A, #689F38);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="ground"></div>
+    
+    <div id="cat-container" class="walk">
+        <div class="cat">
+            <div class="cat-body">
+                <div class="leg front-left"></div>
+                <div class="leg front-right"></div>
+                <div class="leg back-left"></div>
+                <div class="leg back-right"></div>
+            </div>
+            <div class="tail"></div>
+            <div class="cat-head">
+                <div class="ear left"><div class="ear-inner"></div></div>
+                <div class="ear right"><div class="ear-inner"></div></div>
+                <div class="eye left"><div class="eye-shine"></div></div>
+                <div class="eye right"><div class="eye-shine"></div></div>
+                <div class="nose"></div>
+                <div class="mouth">
+                    <div class="mouth-line"></div>
+                    <div class="mouth-curve left"></div>
+                    <div class="mouth-curve right"></div>
+                </div>
+                <div class="whiskers">
+                    <div class="whisker left1"></div>
+                    <div class="whisker left2"></div>
+                    <div class="whisker left3"></div>
+                    <div class="whisker right1"></div>
+                    <div class="whisker right2"></div>
+                    <div class="whisker right3"></div>
+                </div>
+            </div>
+            <div class="fur fur-1"></div>
+            <div class="fur fur-2"></div>
+            <div class="fur fur-3"></div>
+            <div class="fur fur-4"></div>
+            <div class="fur fur-5"></div>
+            <div class="fur fur-6"></div>
+        </div>
+        <div class="speech-bubble" id="bubble"></div>
+    </div>
+    
+    <div id="controls">
+        <button onclick="kediKonus()">Merhaba De</button>
+        <button onclick="kediyiYuru()" id="walk-btn" class="active">Yürü</button>
+        <button onclick="kediyiOturt()" id="sit-btn">Otur</button>
+        <button onclick="kediyiUyut()" id="sleep-btn">Uyut</button>
+    </div>
+
+    <script>
+        const catContainer = document.getElementById('cat-container');
+        const bubble = document.getElementById('bubble');
+        const walkBtn = document.getElementById('walk-btn');
+        const sitBtn = document.getElementById('sit-btn');
+        const sleepBtn = document.getElementById('sleep-btn');
+        
+        // Kedi state değişkenleri
+        let currentState = 'walk';
+        let catX = 100;
+        let catY = 100;
+        let speedX = 2;
+        let speedY = 1;
+        let direction = 1;
+        
+        // Rastgele göz kırpma
+        function randomBlink() {
+            const eyes = document.querySelectorAll('.eye');
+            eyes.forEach(eye => {
+                eye.classList.add('blink');
+                setTimeout(() => {
+                    eye.classList.remove('blink');
+                }, 200);
+            });
+            
+            // Rastgele aralıklarla göz kırp
+            setTimeout(randomBlink, Math.random() * 3000 + 2000);
+        }
+        
+        // Kedi pozisyon güncelleme
+        function updateCatPosition() {
+            const maxX = window.innerWidth - 350;
+            const maxY = window.innerHeight - 280;
+            
+            if (currentState === 'walk') {
+                catX += speedX;
+                catY += speedY;
+                
+                // Duvarlardan sekme
+                if (catX > maxX) {
+                    catX = maxX;
+                    speedX = -2 - Math.random() * 2;
+                    direction = -1;
+                    flipCat();
+                } else if (catX < 0) {
+                    catX = 0;
+                    speedX = 2 + Math.random() * 2;
+                    direction = 1;
+                    flipCat();
+                }
+                
+                if (catY > maxY) {
+                    catY = maxY;
+                    speedY = -1 - Math.random();
+                } else if (catY < 0) {
+                    catY = 0;
+                    speedY = 1 + Math.random();
+                }
+                
+                // Rastgele hız değişikliği
+                if (Math.random() < 0.02) {
+                    speedX = (Math.random() * 3 + 1) * direction;
+                    speedY = (Math.random() * 3 - 1.5);
+                }
+            }
+            
+            catContainer.style.left = catX + 'px';
+            catContainer.style.top = catY + 'px';
+            
+            requestAnimationFrame(updateCatPosition);
+        }
+        
+        // Kedi yönünü çevirme
+        function flipCat() {
+            catContainer.style.transform = `scaleX(${direction})`;
+        }
+        
+        // Kedi konuşma fonksiyonu
+        function kediKonus() {
+            // Mevcut state'i geçici olarak değiştir
+            const prevState = currentState;
+            changeCatState('wave');
+            
+            // Konuşma balonu göster
+            const messages = [
+                "Merhaba minnoş hemşire, nasılsınız?",
+                "Miyav! Bugün nasılsın?",
+                "Beni çağırdınız mı?",
+                "Sevilmek istiyorum!",
+                "Acaba mama var mı?"
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            bubble.textContent = randomMessage;
+            bubble.classList.add('show');
+            
+            // Animasyon bitince önceki state'e dön
+            setTimeout(() => {
+                changeCatState(prevState);
+            }, 1000);
+            
+            // 5 saniye sonra balonu gizle
+            setTimeout(() => {
+                bubble.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Kedi state değiştirme fonksiyonu
+        function changeCatState(newState) {
+            catContainer.classList.remove('walk', 'sit', 'sleep', 'wave');
+            currentState = newState;
+            
+            // Buton durumlarını güncelle
+            walkBtn.classList.remove('active');
+            sitBtn.classList.remove('active');
+            sleepBtn.classList.remove('active');
+            
+            if (newState === 'walk') {
+                catContainer.classList.add('walk');
+                walkBtn.classList.add('active');
+            } else if (newState === 'sit') {
+                catContainer.classList.add('sit');
+                sitBtn.classList.add('active');
+            } else if (newState === 'sleep') {
+                catContainer.classList.add('sleep');
+                sleepBtn.classList.add('active');
+            } else if (newState === 'wave') {
+                catContainer.classList.add('wave');
+            }
+        }
+        
+        // Kontrol fonksiyonları
+        function kediyiYuru() {
+            changeCatState('walk');
+        }
+        
+        function kediyiOturt() {
+            changeCatState('sit');
+        }
+        
+        function kediyiUyut() {
+            changeCatState('sleep');
+        }
+        
+        // Sayfa yüklendiğinde
+        window.onload = function() {
+            updateCatPosition();
+            randomBlink();
+            
+            // Kediyi tıklayınca konuş
+            catContainer.addEventListener('click', kediKonus);
+            
+            // Fare kedinin üzerindeyken kuyruk hareketi hızlandır
+            catContainer.addEventListener('mouseenter', () => {
+                if (currentState === 'walk') {
+                    document.querySelector('.tail').style.animationDuration = '2s';
+                }
+            });
+            
+            catContainer.addEventListener('mouseleave', () => {
+                document.querySelector('.tail').style.animationDuration = '4s';
+            });
+        };
+    </script>
+</body>
+</html>
