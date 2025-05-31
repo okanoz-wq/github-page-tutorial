@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ay Tenli Minnak Hemşireye Mesaj</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f0f8ff, #add8e6);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .message-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.85);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+      max-width: 500px;
+      text-align: center;
+      z-index: 100;
+    }
+
+    .message {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .floating-item {
+      position: absolute;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    .heart {
+      width: 40px;
+      height: 40px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="red" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>');
+      background-size: contain;
+      animation: float 8s linear infinite;
+    }
+
+    .rose {
+      width: 35px;
+      height: 35px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="white" d="M50 20c10 0 20 10 20 20 0 10-10 20-20 20-10 0-20-10-20-20 0-10 10-20 20-20z"/><path fill="green" d="M50 60l-10-10h20z"/></svg>');
+      background-size: contain;
+      animation: float 10s linear infinite;
+    }
+
+    .cat {
+      width: 40px;
+      height: 40px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="gray" d="M85 50c0 20-15 35-35 35S15 70 15 50s15-35 35-35 35 15 35 35z"/><path fill="gray" d="M30 40a5 5 0 1 1-10 0 5 5 0 0 1 10 0zm45 0a5 5 0 1 1-10 0 5 5 0 0 1 10 0z"/><path d="M40 60a10 10 0 0 0 20 0" stroke="gray" stroke-width="3" fill="none"/></svg>');
+      background-size: contain;
+      animation: float 12s linear infinite;
+    }
+
+    .moon {
+      width: 60px;
+      height: 60px;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="gold" d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1-8.313-12.454z"/></svg>');
+      background-size: contain;
+      animation: float 15s linear infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100px) translateX(100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: white;
+      padding: 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.3s;
+    }
+
+    .music-control:hover {
+      transform: scale(1.1);
+      background: #f0f0f0;
+    }
+
+    #youtube-player {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border: none;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div class="message-container">
+    <div class="message">
+      Ay tenli minnak hemşire, sınavlar seni ne kadar yormuş olsa da, ben senin yanında olmaya, her daim destek olmaya söz veriyorum. Başarılı olacağına, ışığınla hep parlayacağına inanıyorum.Tek başıma hallederim, nasıl olsa geçer' desen de, ben seni yalnız bırakmam. Senin üzülmeni asla istemem. Hep yanında olmak ve her zaman seni desteklemek istiyorum, çünkü senin mutlu olman benim için her şeyden önemli. Sadece bugün değil, her zaman buradayım senin için. 🍀💙
+    </div>
+  </div>
+
+  <div class="music-control" onclick="startExperience()">
+    ♫
+  </div>
+
+  <!-- YouTube iframe -->
+  <iframe id="youtube-player" src="https://www.youtube.com/embed/HirFutbbIWg?enablejsapi=1&loop=1&playlist=HirFutbbIWg" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+  <script>
+    let player;
+    let animationStarted = false;
+
+    // Animasyonlu öğeleri oluştur
+    function createFloatingItems() {
+      const types = ['heart', 'rose', 'cat', 'moon'];
+      
+      for (let i = 0; i < 25; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const item = document.createElement('div');
+        item.className = `floating-item ${type}`;
+        
+        // Rastgele başlangıç pozisyonu ve gecikme
+        item.style.left = Math.random() * 100 + 'vw';
+        item.style.animationDelay = Math.random() * 5 + 's';
+        item.style.animationDuration = 5 + Math.random() * 15 + 's';
+        
+        document.body.appendChild(item);
+      }
+    }
+
+    // YouTube API yüklendikten sonra çalışacak fonksiyon
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('youtube-player', {
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange
+        }
+      });
+    }
+
+    function onPlayerReady(event) {
+      // Müzik butonuna tıklandığında çalacak
+    }
+
+    function onPlayerStateChange(event) {
+      if (event.data === YT.PlayerState.PLAYING) {
+        console.log("Müzik başladı");
+      }
+    }
+
+    function startExperience() {
+      if (!animationStarted) {
+        createFloatingItems();
+        animationStarted = true;
+        
+        // Müzik butonunu gizle
+        document.querySelector('.music-control').style.display = 'none';
+      }
+      
+      // Müziği başlat
+      if (player && player.playVideo) {
+        player.playVideo();
+      }
+    }
+
+    // Sayfa yüklendiğinde YouTube API yükle
+    window.onload = function() {
+      // YouTube API scriptini dinamik olarak yükle
+      const tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    };
+  </script>
+</body>
+</html>
