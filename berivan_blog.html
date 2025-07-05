@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berivan Örüç Çiftçi | Die With a Smile</title>
+    <style>
+        :root {
+            --mavi: #8ac4ff;
+            --beyaz: #f9f9f9;
+            --pembe: #ffc0cb;
+            --lila: #d8bfd8;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, var(--beyaz), var(--pembe), var(--lila), var(--mavi));
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: #ff6b9d;
+        }
+        
+        header h1 span {
+            color: #5a8fdb;
+        }
+        
+        nav a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #5a5a5a;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #ff6b9d;
+        }
+        
+        .hero {
+            height: 80vh;
+            background: url('https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            font-style: italic;
+        }
+        
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: #5a8fdb;
+        }
+        
+        .about {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .instagram-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #833ab4, #fd1d1d, #fcb045);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+        
+        .instagram-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            width: 300px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .card img, .card video {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-content {
+            padding: 1rem;
+        }
+        
+        .card h3 {
+            margin: 0;
+            color: #ff6b9d;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.9);
+            margin-top: 2rem;
+        }
+        
+        #musicToggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: #ff6b9d;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .instagram-feed {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+        
+        .instagram-feed img {
+            width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+        }
+        
+        .instagram-feed img:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav {
+                margin-top: 1rem;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .instagram-feed {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Müzik Çalar -->
+    <audio id="bgMusic" autoplay loop>
+        <source src="https://www.youtube.com/watch?v=kPa7bsKwL-c&list=RDkPa7bsKwL-c&start_radio=1" type="audio/mpeg">
+        <!-- Die With a Smile müziği için geçici örnek link -->
+    </audio>
+    <button id="musicToggle">🔊 Müziği Kapat</button>
+
+    <!-- Header -->
+    <header>
+        <h1>Berivan<span> Oruç Çiftçi</span></h1>
+        <nav>
+            <a href="#home">Anasayfa</a>
+            <a href="#about">Hakkında</a>
+            <a href="#events">Etkinlikler</a>
+            <a href="#travel">Seyahatler</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Hayatı Gülümseyerek Yaşa</h2>
+            <p>Die With a Smile ♫</p>
+        </div>
+    </section>
+
+    <!-- Hakkında -->
+    <section id="about" class="about">
+        <h2>Ben Kimim?</h2>
+        <p>Merhaba! Ben Berivan. İstanbul'da yaşıyorum, moda, seyahat ve güzellik dünyasında influencer olarak yoluma devam ediyorum. 🎀</p>
+        <a href="https://www.instagram.com/berivanorucciftci/" class="instagram-btn" target="_blank">Instagram'da Takip Et</a>
+        
+        <!-- Instagram Feed -->
+        <div class="instagram-feed">
+            <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Instagram Post">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Instagram Post">
+            <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Instagram Post">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Instagram Post">
+            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Instagram Post">
+            <img src="https://images.unsplash.com/photo-1554151228-14d9def656e4?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Instagram Post">
+        </div>
+    </section>
+
+    <!-- Etkinlikler -->
+    <section id="events">
+        <h2>Etkinlikler</h2>
+        <div class="card-container">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1527529482837-4698179dc6ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Moda Haftası">
+                <div class="card-content">
+                    <h3>İstanbul Moda Haftası</h3>
+                    <p>2024'ün en büyük moda etkinliğinde ben de vardım!</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Konser">
+                <div class="card-content">
+                    <h3>Müzik Festivali</h3>
+                    <p>Unutulmaz bir yaz gecesi...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seyahatler -->
+    <section id="travel">
+        <h2>Seyahatler</h2>
+        <div class="card-container">
+            <div class="card">
+                <video controls>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-traveling-down-a-tree-lined-road-26137-large.mp4" type="video/mp4">
+                </video>
+                <div class="card-content">
+                    <h3>Kapadokya</h3>
+                    <p>Balonlarla eşsiz bir manzara!</p>
+                </div>
+            </div>
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Sahil">
+                <div class="card-content">
+                    <h3>Bodrum</h3>
+                    <p>Mavi bayraklı plajlarda tatil keyfi.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Berivan Örüç Çiftçi | Tüm Hakları Saklıdır</p>
+    </footer>
+
+    <script>
+        // Müzik Kontrolü
+        const music = document.getElementById('bgMusic');
+        const toggleBtn = document.getElementById('musicToggle');
+        
+        // Sayfa yüklendiğinde müziği başlat (kullanıcı etkileşimi sonrası)
+        document.body.addEventListener('click', function initMusic() {
+            music.play();
+            document.body.removeEventListener('click', initMusic);
+        }, { once: true });
+        
+        // Müzik toggle butonu
+        toggleBtn.addEventListener('click', function() {
+            if (music.paused) {
+                music.play();
+                toggleBtn.textContent = '🔊 Müziği Kapat';
+            } else {
+                music.pause();
+                toggleBtn.textContent = '🔇 Müziği Aç';
+            }
+        });
+        
+        // Sayfa yüklendiğinde buton durumunu ayarla
+        window.addEventListener('load', function() {
+            toggleBtn.textContent = music.paused ? '🔇 Müziği Aç' : '🔊 Müziği Kapat';
+        });
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
